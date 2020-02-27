@@ -1,4 +1,7 @@
-from flask import render_template, redirect, url_for, request, flash, session, jsonify
+import json
+
+from flask import render_template, redirect, url_for, request, flash, jsonify
+from flask_login import login_required
 
 from . import buupass
 from .model import homes, hotels, flights, experiences, cars
@@ -9,14 +12,15 @@ def index():
     return render_template("index.html")
 
 
-@buupass.route("/api/v1/resources/homes", methods=["GET"])
+@buupass.route("/api/v1/resources/homes", methods=["GET", "POST"])
+# @login_required
 def search_homes():
-    query_params = request.args
+    query_params = request.json
     location = query_params.get("location")
     capacity = query_params.get("capacity")
     no_of_rooms = query_params.get("no_of_rooms")
     if not location or not capacity or not no_of_rooms:
-        return "Kindly fill in all the fields"
+        return {"error": "Kindly fill in all the fields"}
     results = []
 
     for home in homes:
@@ -27,12 +31,13 @@ def search_homes():
         ):
             results.append(home)
 
-    return jsonify(results)
+    return jsonify({"homes": results})
 
 
-@buupass.route("/api/v1/resources/hotels", methods=["GET"])
+@buupass.route("/api/v1/resources/hotels", methods=["GET", "POST"])
+# @login_required
 def search_hotels():
-    query_params = request.args
+    query_params = request.json
     location = query_params.get("location")
     capacity = query_params.get("capacity")
     no_of_rooms = query_params.get("no_of_rooms")
@@ -48,12 +53,13 @@ def search_hotels():
         ):
             results.append(hotel)
 
-    return jsonify(results)
+    return jsonify({"hotels": results})
 
 
-@buupass.route("/api/v1/resources/cars", methods=["GET"])
+@buupass.route("/api/v1/resources/cars", methods=["GET", "POST"])
+# @login_required
 def search_cars():
-    query_params = request.args
+    query_params = request.json
     type_ = query_params.get("type")
     capacity = query_params.get("capacity")
     price = query_params.get("price")
@@ -69,12 +75,13 @@ def search_cars():
             and car["price"] == price
         ):
             results.append(car)
-    return jsonify(results)
+    return jsonify({"cars": results})
 
 
-@buupass.route("/api/v1/resources/experiences", methods=["GET"])
+@buupass.route("/api/v1/resources/experiences", methods=["GET", "POST"])
+# @login_required
 def search_experiences():
-    query_params = request.args
+    query_params = request.json
     experience_ = query_params.get("experience")
     if not experience_:
         return "Kindly fill in all the fields"
@@ -85,12 +92,13 @@ def search_experiences():
         if experience["experience"] == experience_:
             results.append(experience)
 
-    return jsonify(results)
+    return jsonify({"experiences": result})
 
 
-@buupass.route("/api/v1/resources/flights", methods=["GET"])
+@buupass.route("/api/v1/resources/flights", methods=["GET", "POST"])
+# @login_required
 def search_flights():
-    query_params = request.args
+    query_params = request.json
     destination = query_params.get("destination")
     arrival = query_params.get("arrival")
     departure = query_params.get("departure")
@@ -109,29 +117,34 @@ def search_flights():
         ):
             results.append(flight)
 
-    return jsonify(results)
+    return jsonify({"flights": results})
 
 
 @buupass.route("/api/v1/resources/homes/all", methods=["GET"])
+# @login_required
 def get_homes():
-    return jsonify(homes)
+    return jsonify({"homes": homes})
 
 
 @buupass.route("/api/v1/resources/hotels/all", methods=["GET"])
+# @login_required
 def get_hotels():
-    return jsonify(hotels)
+    return jsonify({"hotels": hotels})
 
 
 @buupass.route("/api/v1/resources/cars/all", methods=["GET"])
+# @login_required
 def get_cars():
-    return jsonify(cars)
+    return jsonify({"cars": cars})
 
 
 @buupass.route("/api/v1/resources/experiences/all", methods=["GET"])
+# @login_required
 def get_experiences():
-    return jsonify(experiences)
+    return jsonify({"experiences": experiences})
 
 
 @buupass.route("/api/v1/resources/flights/all", methods=["GET"])
+# @login_required
 def get_flights():
-    return jsonify(flights)
+    return jsonify({"flights": flights})
