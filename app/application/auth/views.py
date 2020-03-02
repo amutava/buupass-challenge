@@ -45,3 +45,8 @@ def register():
 def sign_out():
     logout_user()
     return redirect(url_for("auth.login"))
+
+
+@auth.route("/password_reset")
+def password_reset():
+    return render_template("pwd-reset.html")
