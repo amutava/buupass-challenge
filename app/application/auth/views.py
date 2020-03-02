@@ -50,3 +50,33 @@ def sign_out():
 @auth.route("/password_reset")
 def password_reset():
     return render_template("pwd-reset.html")
+
+
+@auth.route("/account")
+def account():
+    return render_template("account.html")
+
+
+@auth.route("/account_bookmarks")
+def account_bookmarks():
+    return render_template("account-bookmarks.html")
+
+
+@auth.route("/account_cards")
+def account_cards():
+    return render_template("account-cards.html")
+
+
+@auth.route("/account_notifications")
+def account_notifications():
+    return render_template("account-notifications.html")
+
+
+@auth.route("/account_travelers")
+def account_travelers():
+    return render_template("account-travelers.html")
+
+
+@auth.route("/account_history")
+def account_history():
+    return render_template("account-history.html")
