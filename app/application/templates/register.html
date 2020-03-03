@@ -24,21 +24,21 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="index.html">
+            <a class="navbar-brand" href="{{ url_for('buupass.index') }}">
               <img src="static/img/logo.png" alt="Image Alternative text" title="Image Title"/>
             </a>
           </div>
           <div class="collapse navbar-collapse" id="navbar-main">
             <ul class="nav navbar-nav">
               <li class="active dropdown">
-                <a class="dropdown-toggle" href="index.html" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Pages</a>
+                <a class="dropdown-toggle" href="{{ url_for('buupass.index') }}" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Pages</a>
                 <div class="dropdown-menu dropdown-menu-lg">
                   <div class="row">
                     <div class="col-md-4">
                       <h5 class="dropdown-meganav-list-title">Homepages</h5>
                       <ul class="dropdown-meganav-list-items">
                         <li>
-                          <a href="index.html">Index 1</a>
+                          <a href="{{ url_for('buupass.index') }}">Index 1</a>
                         </li>
                         <li>
                           <a href="index-2.html">Index 2</a>
