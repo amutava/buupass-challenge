@@ -3,6 +3,7 @@ import os
 from flask import Flask
 from flask_login import LoginManager
 from flask_bootstrap import Bootstrap
+from flask_sqlalchemy import SQLAlchemy
 
 from config import config
 
@@ -10,7 +11,7 @@ from config import config
 basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__)
 login_manager = LoginManager()
-
+db = SQLAlchemy()
 bootstrap = Bootstrap()
 
 # can be set to basic ,None or strong
@@ -27,6 +28,8 @@ def create_app(config_name):
     config[config_name].init_app(app)
     app.config["SECRET_KEY"] = "hard to guess string"
     bootstrap.init_app(app)
+    db.init_app(app)
+    login_manager.init_app(app)
 
     from .auth import auth as auth_blueprint
 
