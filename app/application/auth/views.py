@@ -55,8 +55,8 @@ def sign_out():
 
 @auth.route("/password_reset", methods=["GET", "POST"])
 def password_reset():
-    if current_user.is_authenticated:
-        return redirect(url_for("login"))
+    # if current_user.is_authenticated:
+    #     return redirect(url_for("auth.login"))
 
     pass_reset_form = ResetPasswordRequestForm()
     if pass_reset_form.validate_on_submit():
@@ -65,7 +65,7 @@ def password_reset():
             send_password_reset_email(user)
 
         flash("Check your email for the instructions to reset your password")
-        return redirect(url_for("login"))
+        return redirect(url_for("auth.login"))
 
     return render_template("pwd-reset.html", pass_reset_form=pass_reset_form)
 
@@ -73,18 +73,18 @@ def password_reset():
 @auth.route("/reset_password/<token>", methods=["GET", "POST"])
 def reset_password(token):
     if current_user.is_authenticated:
-        return redirect(url_for("login"))
+        return redirect(url_for("auth.login"))
 
     user = User.verify_reset_password_token(token)
     if not user:
-        return redirect(url_for("login"))
+        return redirect(url_for("auth.login"))
 
     reset_form = ResetPasswordForm()
     if reset_form.validate_on_submit():
         user.set_password(reset_form.password.data)
         db.session.commit()
         flash("Your password has been reset.")
-        return redirect(url_for("login"))
+        return redirect(url_for("auth.login"))
     return render_template("pwd-reset.html", reset_form=reset_form)
 
 
