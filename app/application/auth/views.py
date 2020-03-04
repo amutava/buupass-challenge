@@ -55,9 +55,6 @@ def sign_out():
 
 @auth.route("/password_reset", methods=["GET", "POST"])
 def password_reset():
-    # if current_user.is_authenticated:
-    #     return redirect(url_for("auth.login"))
-
     pass_reset_form = ResetPasswordRequestForm()
     if pass_reset_form.validate_on_submit():
         user = User.query.filter_by(email=pass_reset_form.email.data).first()
