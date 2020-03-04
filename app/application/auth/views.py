@@ -6,9 +6,10 @@ from flask import render_template, redirect, url_for, request, flash, session
 from flask_login import login_user, logout_user, current_user, login_required
 
 from . import auth
-from .forms import LoginForm, RegisterForm
+from .forms import LoginForm, RegisterForm, ResetPasswordRequestForm, ResetPasswordForm
 from .model import User
 from .. import db
+from ..email import send_email, send_password_reset_email
 
 log = logging.getLogger(__name__)
 
@@ -52,9 +53,39 @@ def sign_out():
     return redirect(url_for("auth.login"))
 
 
-@auth.route("/password_reset")
+@auth.route("/password_reset", methods=["GET", "POST"])
 def password_reset():
-    return render_template("pwd-reset.html")
+    if current_user.is_authenticated:
+        return redirect(url_for("login"))
+
+    pass_reset_form = ResetPasswordRequestForm()
+    if pass_reset_form.validate_on_submit():
+        user = User.query.filter_by(email=pass_reset_form.email.data).first()
+        if user:
+            send_password_reset_email(user)
+
+        flash("Check your email for the instructions to reset your password")
+        return redirect(url_for("login"))
+
+    return render_template("pwd-reset.html", pass_reset_form=pass_reset_form)
+
+
+@auth.route("/reset_password/<token>", methods=["GET", "POST"])
+def reset_password(token):
+    if current_user.is_authenticated:
+        return redirect(url_for("login"))
+
+    user = User.verify_reset_password_token(token)
+    if not user:
+        return redirect(url_for("login"))
+
+    reset_form = ResetPasswordForm()
+    if reset_form.validate_on_submit():
+        user.set_password(reset_form.password.data)
+        db.session.commit()
+        flash("Your password has been reset.")
+        return redirect(url_for("login"))
+    return render_template("pwd-reset.html", reset_form=reset_form)
 
 
 @auth.route("/account")

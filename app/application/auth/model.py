@@ -1,9 +1,15 @@
+import jwt
+import logging
+
+from time import time
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask_login import UserMixin
 from datetime import datetime
 from flask import current_app
 from .. import db, login_manager
 from werkzeug.security import generate_password_hash, check_password_hash
+
+log = logging.getLogger(__name__)
 
 
 class User(UserMixin, db.Model):
@@ -43,6 +49,24 @@ class User(UserMixin, db.Model):
         self.confirmed = True
         db.session.add(self)
         return True
+
+    def get_reset_password_token(self, expires_in=600):
+        return jwt.encode(
+            {"reset_password": self.id, "exp": time() + expires_in},
+            current_app.config["SECRET_KEY"],
+            algorithm="HS256",
+        ).decode("utf-8")
+
+    @staticmethod
+    def verify_reset_password_token(token):
+        try:
+            id_ = jwt.decode(
+                token, current_app.config["SECRET_KEY"], algorithms=["HS256"]
+            )["reset_password"]
+        except Exception as e:
+            log.info(str(e))
+            return
+        return User.query.get(id_)
 
 
 users = [
