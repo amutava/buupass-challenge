@@ -1,3 +1,76 @@
+from .. import db
+
+
+class PaymentMode(db.Model):
+    __tablename__ = "paymentmodes"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64))
+    payment_type = db.Column(db.String(64), index=True, unique=True, nullable=False)
+    cardNumber = db.Column(db.String(64), index=True, unique=True, nullable=False)
+    cvv = db.Column(db.String(64), nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False)
+    modified_at = db.Column(db.DateTime, nullable=False)
+    deleted_at = db.Column(db.DateTime, nullable=False)
+
+
+class Travellers(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String(64))
+    last_name = db.Column(db.String(64))
+    email = db.Column(db.String(64))
+    phone_number = db.Column(db.String(64))
+    origin = db.Column(db.String(64))
+    created_at = db.Column(db.DateTime, nullable=False)
+    modified_at = db.Column(db.DateTime, nullable=False)
+    deleted_at = db.Column(db.DateTime, nullable=False)
+    # historys = db.relationship('BookingHistory', backref='history', lazy='dynamic')
+
+
+class BookingHistory(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64))
+    location = db.Column(db.String(64))
+    date = db.Column(db.String(64))
+    price = db.Column(db.String(64))
+
+
+class BookMarks(db.Model):
+    """
+    The things a user has bookmarked for future reference...
+    query them in ascending order by date.
+    """
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(64))
+    description = db.Column(db.String(64))
+    price = db.Column(db.String(64))
+    created_at = db.Column(db.DateTime, nullable=False)
+
+
+class Subscriptions(db.Model):
+    """
+    These are the notifications the user has subscribed to / they want to
+    receive these notifications.
+    This should be linked to a user...
+    """
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(64))
+    description = db.Column(db.String(64))
+
+
+class Preferences(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(64))
+    home_airport = db.Column(db.String(64))
+    email_site = db.Column(db.String(64))
+    password = db.Column(db.String(64))
+    default_language = db.Column(db.String(64))
+    default_currency = db.Column(db.String(64))
+    temperature = db.Column(db.String(64))
+    modified_at = db.Column(db.DateTime, nullable=False)
+
+
 hotels = [
     {
         "location": "Newyork",
